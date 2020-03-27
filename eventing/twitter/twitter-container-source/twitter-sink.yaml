@@ -1,0 +1,10 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: sink
+spec:
+  template:
+    spec:
+      containers:
+      - image: gcr.io/yokicloud/viewer:0.1
+        imagePullPolicy: Always
