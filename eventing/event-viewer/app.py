@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 
 @app.route('/', methods=['POST'])
-def pubsub_push():
+def event_push():
     content = request.data.decode('utf-8')
     info(f'Event Display received event: {content}')
     return 'OK', 200

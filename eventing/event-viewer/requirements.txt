@@ -1,9 +1,5 @@
 kncloudevents==0.1.0
 pylint==2.4.0
-pandas==0.25.1
 gunicorn==19.9.0
-pyspark==2.4.4
 cloudevents==0.2.3
-google-cloud==0.34.0
-google-cloud-bigquery==1.24.0
 Flask==1.1.1

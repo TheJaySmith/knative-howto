@@ -7,31 +7,6 @@ exec > >(tee -i logfile.txt)
 export MYROOT=$(pwd)
 clear 
 
-### install golang v1.13.1
-
-mkdir ~/.golang
-cd ~/.golang
-if ! [ -x "$(command -v go)" ]; then
-    echo "***** Installing GoLang v1.13.1 *****"
-    if [[ "$OSTYPE"  == "linux-gnu" ]]; then
-        curl https://dl.google.com/go/go1.13.1.linux-amd64.tar.gz -o go1.13.1.linux-amd64.tar.gz
-        sudo tar -C /usr/local -xzf go1.13.1.linux-amd64.tar.gz
-        echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.profile
-        #source ~/.profile
-        export PATH=$PATH:/usr/local/go/bin
-
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        curl https://dl.google.com/go/go1.13.1.darwin-amd64.tar.gz -o go1.13.1.darwin-amd64.tar.gz
-        sudo tar -C /usr/local -xzf go1.13.1.darwin-amd64.tar.gz
-        echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.bash_profile
-        #source ~/.bash_profile
-        export PATH=$PATH:/usr/local/go/bin
-    else
-        echo "unknown OS"
-    fi
-else 
-    echo "GoLang is already installed. Let's move on"
-fi
 
 ### install Google Cloud SDK
 if ! [ -x "$(command -v gcloud)" ]; then
@@ -60,7 +35,8 @@ else
     echo "Google Cloud SDK is already installed. Let's move on"
 fi
 
-sleep 30
+
+sleep 5
 
 #### BoilerPlate Code for
 cd $MYROOT
@@ -71,7 +47,6 @@ echo "******Setting Variables******"
 export ZONE='us-central1-a'
 export PROJECT_ID=$(gcloud config get-value project)
 export PROJ_NUMBER=$(gcloud projects list --filter="${PROJECT_ID}" --format="value(PROJECT_NUMBER)")
-export BUCKET_ID='my-secrets'
 export CLUSTER_NAME='cr-knative'
 export KO_DOCKER_REPO='gcr.io/'${PROJECT_ID}
 
@@ -145,12 +120,16 @@ kubectl patch configmap config-domain --namespace knative-serving --patch \
 ## Install Knative Eventing
 echo "Install Knative Eventing"
 kubectl apply --selector knative.dev/crd-install=true \
---filename https://github.com/knative/eventing/releases/download/v0.11.0/release.yaml \
---filename https://github.com/knative/serving/releases/download/v0.11.0/monitoring.yaml
+--filename https://github.com/knative/eventing/releases/download/v0.13.0/eventing-crds.yaml 
 
-kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.11.0/release.yaml \
---filename https://github.com/knative/serving/releases/download/v0.11.0/monitoring.yaml
+kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.13.0/eventing-core.yaml \
+--filename https://github.com/knative/serving/releases/download/v0.13.0/monitoring-core.yaml
 
-#Install Tekton
-echo "Installing Tekton"
-kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+
+# Install Advanced Monitoring
+kubectl apply --filename https://github.com/knative/serving/releases/download/v0.13.0/monitoring-metrics-prometheus.yaml \
+--filename https://github.com/knative/serving/releases/download/v0.13.0/monitoring-logs-elasticsearch.yaml \
+--filename https://github.com/knative/serving/releases/download/v0.13.0/monitoring-tracing-jaeger.yaml
+
+# Enable Secret Admin to compute service account
+gcloud projects add-iam-policy-binding $PROJECT_ID --member serviceAccount:$PROJ_NUMBER-compute@developer.gserviceaccount.com --role roles/secretmanager.admin

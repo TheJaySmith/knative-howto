@@ -1,10 +1,10 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: sink
+  name: twitter
 spec:
   template:
     spec:
       containers:
-      - image: gcr.io/yokicloud/viewer:0.1
+      - image: gcr.io/rikudog/twitter-sink:v1
         imagePullPolicy: Always
