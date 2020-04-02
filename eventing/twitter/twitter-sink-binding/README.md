@@ -14,12 +14,18 @@ For the purposes of this, we will create a container that pulls tweets from Twit
 
 Since we will be using Twitter, let’s first get a Twitter API Key and Secret. You will need a Twitter account. If you don’t have one, they are free, and you can follow me at @thejaysmith if you like. Let’s go to [Twitter’s Developer Page](https://developer.twitter.com/en/apps) and create an app.
 
+![create an app](https://raw.githubusercontent.com/TheJaySmith/knative-howto/master/images/create-an-app.png)
+
 You will be required to fill out “App name” and “Application description”. What you type here is arbitrary but I would recommend naming the application something simple like “Knative Test” (which can also work for Application description).
 
 For the purposes of this demo, you can use your personal website or the GitHub repo URL for “Website URL” and write your best explanation as to what Knative is in the “Tell us how this app will be used” field. You will then agree to the Developer Agreement.
 On the following page, let’s go to “Keys and tokens”
 
+![twitter auth](https://raw.githubusercontent.com/TheJaySmith/knative-howto/master/images/twitter-auth.png)
+
 You will copy the “API Key” and the “API Secret” and store it somewhere safe. From there, go ahead and click the “Generate” button to get an “Access token” and “Access token secret”
+
+![generate token](https://raw.githubusercontent.com/TheJaySmith/knative-howto/master/images/generate-token.png)
 
 You will see a pop-up containing the “Access token” and “Access token secret”. Please copy those as we will be using them later.
 
@@ -56,6 +62,8 @@ Cloud Secret Manager
 Google Cloud recently GA’d [Cloud Secret Manager](https://cloud.google.com/secret-manager/) which gives you the ability to securely store your secrets encrypted in Google Cloud. Remember those four Twitter API keys we had earlier? We are going to store them in Google Cloud using the Secret Manager.
 
 We will go from the Hamburger -> Security -> Secrets.
+
+![secret manager](https://raw.githubusercontent.com/TheJaySmith/knative-howto/master/images/secret-manager.png)
 
 Let’s now Create a secret . We will create four so we will put a name for your key in “Name” and the secret in “Secret Value”. For the sake of this demo, be sure to use the below names and give them the corresponding “Secret Value” that you collected in the Twitter section.
 
