@@ -128,7 +128,7 @@ docker push gcr.io/${PROJECT_ID}/event-viewer:v1
 
 We have built the container and pushed it to our local registry. Now let’s move on.
 
-## KNative Twitter Controller
+## KNative Twitter Consumer
 
 Let’s navigate to our `twitter-sink-binding` directory
 
@@ -144,7 +144,7 @@ sed 's|PROJECT_ID|'"$PROJECT_ID"'|g' twitter-sink.sample.yaml > twitter-sink.yam
 sed 's|PROJECT_ID|'"$PROJECT_ID"'|g' twitter-svc.sample.yaml > twitter-svc.yaml
 ```
 
-Now let’s take a look at `twitter-controller.py` and see what it’s doing.
+Now let’s take a look at `twitter-producer.py` and see what it’s doing.
 
 ```python
 #!/usr/bin/env python
@@ -332,11 +332,11 @@ spec:
       name: twitter-event-viewer
 ```
 
-You can see that this object kind is SinkBinding. In the most basic of terms, this will bind a Kubernetes spec to a Sink. With the old ContainerSource method, you would essentially bind a Deployment to a Sink. This was useful for many use cases but also limiting as you could only bind to a Deployment. Now you are able to bind to DaemonSets, Jobs, StatefulSets, Knative Services & Configurations, and of course Deployments.
+You can see that this object kind is **SinkBinding**. In the most basic of terms, this will bind a Kubernetes spec to a Sink. With the old **ContainerSource** method, you would essentially bind a Deployment to a Sink. This was useful for many use cases but also limiting as you could only bind to a Deployment. Now you are able to bind to DaemonSets, Jobs, StatefulSets, Knative Services & Configurations, and of course Deployments.
 
-If you examine the `spec.subject.kind` you will see that we are binding to a Knative Service called “twitter-event-viewer”. The Knative service is that same code from earlier. It will act as the event producer.
+If you examine the `spec.subject.kind` you will see that we are binding to a Knative Service called “twitter-event-viewer”. The Knative service is that same code from earlier. It will act as the event **producer**.
 
-The`spec.sink` is where you define the consumer. In my example, we will be using another Knative service to consume the events. Remember that `event-viewer` container that we created? That will be used in our Knative Service.
+The`spec.sink` is where you define the **consumer**. In my example, we will be using another Knative service to consume the events. Remember that `event-viewer` container that we created? That will be used in our Knative Service.
 
 Let’s go ahead and deploy the binding
 
@@ -361,4 +361,4 @@ $ kubectl logs twitter-event-viewer-rqj4f-deployment-5886bd7f6-5pwvv -c user-con
 
 ## What Happened
 
-Our `twitter-controller` application acts an event producer that runs on a 30 second loop and checks Twitter for tweet matching the search criteria that you set. It will then send those events to our sink `event-viewer` application. In order to view what’s being sent, we just need to read the container logs. You will see a series of tweets come in. If you ran this every 30 seconds, you should see another set of tweets.
+Our `twitter-producer` application acts an event producer that runs on a 30 second loop and checks Twitter for tweet matching the search criteria that you set. It will then send those events to our sink `event-viewer` application. In order to view what’s being sent, we just need to read the container logs. You will see a series of tweets come in. If you ran this every 30 seconds, you should see another set of tweets.

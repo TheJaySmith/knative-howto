@@ -14,5 +14,5 @@ spec:
         app: twitter
     spec:
       containers:
-        - image: gcr.io/PROJECT_ID/twitter-sink:v1
+        - image: gcr.io/PROJECT_ID/twitter-producer:v1
           name: twitter

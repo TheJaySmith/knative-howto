@@ -5,13 +5,9 @@ import json
 import requests
 import time
 
-#from flask import Flask, jsonify, redirect, render_template, request, Response
-
 from google.cloud import secretmanager
 
 import tweepy
-
-from tweepy.streaming import StreamListener
 
 
 sink_url = os.getenv('K_SINK')
@@ -39,17 +35,15 @@ def make_msg(message):
 
 def get_tweet():
     tweets = []
-    for tweet in api.search(q=TOPIC,count=100,
+    for tweet in api.search(q=TOPIC,count=25,
                         lang="en",
-                        since="2019-06-01"):
-        newmsg = make_msg(tweet.text)
-    
+                        since="2020-01-01"):
+        newmsg = make_msg(tweet.text)   
         tweets.append(newmsg)
 
     return tweets
 
 
-body = {"Hello":"World"}
 headers = {'Content-Type': 'application/cloudevents+json'}
 
 while True:

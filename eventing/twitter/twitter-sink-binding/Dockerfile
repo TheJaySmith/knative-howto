@@ -11,4 +11,4 @@ ENV TOPIC=${TOPIC}
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["python", "-u", "/twitter-controller.py"]
+ENTRYPOINT ["python", "-u", "/twitter-producer.py"]
